@@ -1,21 +1,22 @@
-{% extends 'bootstrap/base.html' %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block content %}
 {% include "header.html" %}
 
+<head>
+    <link href="{{ url_for('static', filename='css/comments.css') }}" rel="stylesheet">
+</head>
+
 <!-- Page Header -->
-<header class="masthead" style="background-image: url('{{post.img_url}}')">
-    <div class="overlay"></div>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-md-10 mx-auto">
+<header class="masthead" style="background-image: url('{{ post.img_url }}')">
+    <div class="container position-relative px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
                 <div class="post-heading">
-                    <h1>{{post.title}}</h1>
-                    <h2 class="subheading">{{post.subtitle}}</h2>
+                    <h1>{{ post.title }}</h1>
+                    <h2 class="subheading">{{ post.subtitle }}</h2>
                     <span class="meta">Posted by
-              {{post.author.name}}
-              on {{post.date}}</span>
+              <a href="#">{{ post.author.name }}</a>
+              on {{ post.date }}</span>
                 </div>
             </div>
         </div>
@@ -23,50 +24,77 @@
 </header>
 
 <!-- Post Content -->
-<article>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-md-10 mx-auto">
+<article class="mb-4">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
                 {{ post.body|safe }}
+
                 <hr>
+
+                <!-- If user id is 1 then they can see the Edit Post button -->
                 {% if current_user.id == 1 %}
-                <div class="clearfix">
-                    <a class="btn btn-primary float-right" href="{{url_for('edit_post', post_id=post.id)}}">Edit
-                        Post</a>
-                </div>
+                    <div class="clearfix">
+                        <a class="btn btn-dark float-right" href="{{ url_for('edit_post', post_id=post.id) }}">Edit
+                            Post</a>
+                    </div>
                 {% endif %}
 
-
-                <!--           Comments Area -->
-
-                {{ ckeditor.load() }}
+                <!-- Add New Comment -->
+                {{ ckeditor.load("basic") }}
                 {{ ckeditor.config(name='comment_text') }}
-                {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}) }}
-
-
-                <div class="col-lg-8 col-md-10 mx-auto comment">
-                    {% for comment in post.comments: %}
-                    <ul class="commentList">
-                        <li>
-                            <div class="commenterImage">
-                                <img src="{{ comment.comment_author.email | gravatar }}"/>
-                            </div>
-                            <div class="commentText">
-                                {{comment.text|safe}}
-                                <span class="date sub-text">{{comment.comment_author.name}}</span>
-
-                            </div>
-                        </li>
-                    </ul>
-                    {% endfor %}
-                </div>
-
-
+            <br>
+                {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "btn-outline-dark"}) }}
             </div>
         </div>
     </div>
 </article>
 
-<hr>
+<!-- Comments Area -->
+<div class="container comments-section">
+    <div class="row">
+        <h1 id="comments-title">Comments</h1>
+        {% for comment in comments %}
+            <div class="col-md-8">
+                <div class="col-md-8">
+                    <div class="media g-mb-30 media-comment">
+                        <img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15"
+                             src="{{ comment.commenter.email | gravatar }}" alt="Image Description">
+                        <div class="media-body u-shadow-v18 g-bg-secondary g-pa-30">
+                            <div class="g-mb-15">
+                                <h5 class="h5 g-color-gray-dark-v1 mb-0">{{ comment.commenter.name }}</h5>
+                                <span class="g-color-gray-dark-v4 g-font-size-12">{{ comment.date }}</span>
+                            </div>
+
+                            <p>{{ comment.text | safe }}</p>
+
+                            <ul class="list-inline d-sm-flex my-0">
+                                <li class="list-inline-item g-mr-20">
+                                    <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#">
+                                        <i class="fa fa-thumbs-up g-pos-rel g-top-1 g-mr-3"></i>
+                                        178
+                                    </a>
+                                </li>
+                                <li class="list-inline-item g-mr-20">
+                                    <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#">
+                                        <i class="fa fa-thumbs-down g-pos-rel g-top-1 g-mr-3"></i>
+                                        11
+                                    </a>
+                                </li>
+                                <li class="list-inline-item ml-auto">
+                                    <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#">
+                                        <i class="fa fa-reply g-pos-rel g-top-1 g-mr-3"></i>
+                                        Reply
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+
 {% include "footer.html" %}
-{% endblock %}

@@ -1,40 +1,61 @@
-{% extends 'bootstrap/base.html' %}
-{% import "bootstrap/wtf.html" as wtf %}
-
-{% block content %}
 {% include "header.html" %}
 
-  <!-- Page Header -->
-  <header class="masthead" style="background-image: url('https://images.unsplash.com/photo-1484100356142-db6ab6244067?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=80')">
-    <div class="overlay"></div>
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto">
-          <div class="page-heading">
-            <h1>Log In</h1>
-            <span class="subheading">Welcome Back!</span>
-          </div>
+<!-- Page Header -->
+
+<header class="masthead"
+        style="background-image: url('https://images.unsplash.com/photo-1497864149936-d3163f0c0f4b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2969&q=80')">
+    <div class="container position-relative px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <div class="page-heading">
+                    <h1>Log In</h1>
+                    <span class="subheading">Welcome Back!</span>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </header>
+</header>
+<main class="mb-4">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
 
-  <div class="container">
-    <div class="row">
+                {% include "flash.html" %}
 
-      <div class="col-lg-8 col-md-10 mx-auto content">
-      {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          {% for message in messages %}
-           <p>{{ message }}</p>
-          {% endfor %}
-        {% endif %}
-      {% endwith %}
-        {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}) }}
-      </div>
+                <form class="form-group" action="{{ url_for('login') }}" method="post"
+                      novalidate>
+                    {{ form.hidden_tag() }}
+                    <div class="form-floating">
+                        <input class="form-control" name="email" id="email" type="email"
+                               placeholder="Enter your email..."/>
+                        <label for="email">Email address</label>
+                        {% for error in form.email.errors %}
+                            <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="form-floating">
+                        <input class="form-control" name="password" id="password" type="password"
+                               placeholder="Enter your password..."/>
+                        <label for="password">Password</label>
+                        {% for error in form.password.errors %}
+                            <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="remember me" required>
+                            <label class="form-check-label" for="remember me">
+                                Remember Me
+                            </label>
+                        </div>
+                    </div>
+                    <br/>
+                    <button class="btn btn-dark text-uppercase" id="submitButton" type="submit">Login
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
-
+</main>
 
 {% include "footer.html" %}
-{% endblock %}
