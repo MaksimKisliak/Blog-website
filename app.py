@@ -11,6 +11,8 @@ from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm, ContactF
 from functools import wraps
 from flask_gravatar import Gravatar
 import os
+from dotenv import load_dotenv
+
 
 #   =======================================
 #           CONFIGURE FLASK APP
@@ -52,6 +54,24 @@ import os
     }
 """
 
+
+# Initial setup for local development
+# API_KEY = 'j2312j3knkJBDsadKFJSABFKJ'
+# DB_URL = 'sqlite:///blog.db'
+
+
+# if "ON_HEROKU" in os.environ:     # Setup for Heroku
+if "RAILWAY_ENVIRONMENT" in os.environ:
+    # Setup for Railway
+    API_KEY = os.environ.get("SECRET_KEY")
+    DB_URL = os.environ.get("DATABASE_URL")
+else:
+    # Load from local .env
+    load_dotenv()
+    API_KEY = os.environ.get("SECRET_KEY")
+    DB_URL = os.environ.get("DATABASE_URL")
+
+
 app = Flask(__name__)
 app.app_context().push()
 app.config['SECRET_KEY'] = 'j2312j3knkJBDsadKFJSABFKJ'
@@ -70,7 +90,7 @@ app.debug = True
 #              CONNECT TO DB
 #   =======================================
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -457,5 +477,28 @@ def logout():
     return redirect(url_for('get_all_posts'))
 
 
+#   =======================================
+#               IF A PORT IN USE
+#   =======================================
+# To kill a particular PID associated with a process running on port 5000,
+# you can use the kill command along with the PID number. Here are the steps you can follow:
+# Run the following command to find the PID associated with the process running on port 5000:
+# lsof -i tcp:5000
+# This will list all the processes running on port 5000 along with their respective PIDs.
+# Find the PID of the Python process you want to kill from the output of the previous command.
+# Use the kill command to terminate the process. For example, if the PID is 1234, you can run the following command:
+# kill 1234
+# This will send a SIGTERM signal to the process, which will allow it to perform cleanup operations before terminating.
+# If the process does not terminate within a reasonable amount of time, you can use the kill -9 command to send a SIGKILL signal, which will immediately terminate the process:
+# kill -9 1234
+
+# e.g.
+
+# COMMAND     PID          USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+# ControlCe 18752 maksimkisliak    7u  IPv4 0xa1c716e4639e3559      0t0  TCP *:commplex-main (LISTEN)
+# ControlCe 18752 maksimkisliak    8u  IPv6 0xa1c716e4613d3371      0t0  TCP *:commplex-main (LISTEN)
+
+# kill -9 18752
+
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000, Debug=True)
+    app.run(host='0.0.0.0', port=5000)
