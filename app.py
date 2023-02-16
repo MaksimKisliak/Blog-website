@@ -71,6 +71,7 @@ else:
     API_KEY = os.environ.get("SECRET_KEY")
     DB_URL = os.environ.get("DATABASE_URL")
 
+print(DB_URL)
 
 app = Flask(__name__)
 app.app_context().push()
