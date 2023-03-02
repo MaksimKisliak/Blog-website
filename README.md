@@ -1,6 +1,6 @@
 ## The site was created as part of the 100 Days of Code: The Complete Python Pro Bootcamp course, slightly modified to my liking and deployed on the railway.app
 
-### Some website presentation from the course:
+### Some presentation of my masterpiece:
 <img class="image media" id="image-illiteratecelebratedcopperbutterfly" alt="giphy GIF" src="https://thumbs.gfycat.com/IlliterateCelebratedCopperbutterfly-max-1mb.gif" height="480" width="640">
 
 <p>This is a Python code for a Flask web application that can be used to create a blog website. The application provides various functionalities for the users such as registering an account, logging in, logging out, creating, editing, and deleting blog posts, and adding comments on blog posts.</p>
