@@ -63,19 +63,21 @@ from dotenv import load_dotenv
 # if "ON_HEROKU" in os.environ:     # Setup for Heroku
 if "RAILWAY_ENVIRONMENT" in os.environ:
     # Setup for Railway
-    API_KEY = os.environ.get("SECRET_KEY")
+    API_KEY = os.environ.get("API_KEY")
     DB_URL = os.environ.get("DATABASE_URL")
 else:
     # Load from local .env
     load_dotenv()
-    API_KEY = os.environ.get("SECRET_KEY")
+    API_KEY = os.environ.get("API_KEY")
     DB_URL = os.environ.get("DATABASE_URL")
 
 print(DB_URL)
 
+load_dotenv()
+
 app = Flask(__name__)
 app.app_context().push()
-app.config['SECRET_KEY'] = 'j2312j3knkJBDsadKFJSABFKJ'
+app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 ckeditor = CKEditor(app)
 Bootstrap(app)
