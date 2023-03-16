@@ -59,15 +59,17 @@ from dotenv import load_dotenv
 # API_KEY = 'j2312j3knkJBDsadKFJSABFKJ'
 # DB_URL = 'sqlite:///blog.db'
 
+# Check if running on local machine or cloud server
+is_local = os.environ.get('ENVIRONMENT') is None
 
-# if "ON_HEROKU" in os.environ:     # Setup for Heroku
-if "RAILWAY_ENVIRONMENT" in os.environ:
-    # Setup for Railway
+if is_local:
+    # Load environment variables from .env file
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    load_dotenv(os.path.join(basedir, '.env'))
     API_KEY = os.environ.get("API_KEY")
     DB_URL = os.environ.get("DATABASE_URL")
 else:
-    # Load from local .env
-    load_dotenv()
+    # Assume environment variables are already set for cloud server providers
     API_KEY = os.environ.get("API_KEY")
     DB_URL = os.environ.get("DATABASE_URL")
 
